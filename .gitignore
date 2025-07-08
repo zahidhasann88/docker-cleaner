@@ -8,11 +8,8 @@
 # Test binary, built with `go test -c`
 *.test
 
-# Output of the go coverage tool, specifically when used with LiteIDE
+# Output of the go coverage tool
 *.out
-
-# Dependency directories (remove the comment below to include it)
-vendor/
 
 # Go workspace file
 go.work
@@ -29,23 +26,37 @@ release/
 *.swo
 *~
 
-# OS generated files
+# OS files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Log files
-*.log
-
-# Environment variables
+# Environment files
 .env
 .env.local
-.env.*.local
+docs.txt
+LICENSE
+
+# Docker
+.dockerignore
+
+# Logs
+*.log
 
 # Temporary files
 *.tmp
 *.temp
+
+# Coverage reports
+coverage.html
+coverage.out
+
+# Binary name
+docker-cleaner
+docker-cleaner.exe
+
+# Release artifacts
+*.zip
+*.tar.gz
+*.deb
+*.rpm
+*.dmg

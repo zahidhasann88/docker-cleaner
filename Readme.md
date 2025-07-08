@@ -1,216 +1,224 @@
-# Docker Cleaner
+# Docker Cleaner 🧹
 
-A CLI tool to clean up Docker resources and reclaim disk space.
+A powerful CLI tool to clean up Docker resources and free up disk space. Built with Go and designed for simplicity and efficiency.
 
 ## Features
 
-- 🧹 Clean stopped containers
-- 🖼️ Remove unused images (dangling by default)
-- 💾 Clean unused volumes
-- 🌐 Remove unused networks
-- 📊 Show cleanup statistics
-- 📋 List all Docker resources
-- 🔧 Flexible command-line options
+- 🐳 **Clean Containers**: Remove stopped containers or all containers
+- 🖼️ **Clean Images**: Remove dangling images or all unused images
+- 💾 **Clean Volumes**: Remove unused volumes
+- 🌐 **Clean Networks**: Remove unused networks
+- 📊 **Detailed Reports**: See exactly what was cleaned and how much space was reclaimed
+- 🚀 **Fast & Efficient**: Built with Go for maximum performance
+- 🔒 **Safe**: Asks for confirmation before destructive operations
 
 ## Installation
 
-### Download Pre-built Binaries
+### Download Binary
 
-Download the latest release from the [releases page](https://github.com/yourusername/docker-cleaner/releases).
+Download the latest binary for your platform from the [releases page](https://github.com/zahidhasann88/docker-cleaner/releases).
 
-### Install from Source
-
+#### Linux/macOS
 ```bash
-go install github.com/yourusername/docker-cleaner@latest
+# Download and install
+curl -L https://github.com/zahidhasann88/docker-cleaner/releases/latest/download/docker-cleaner-linux-amd64 -o docker-cleaner
+chmod +x docker-cleaner
+sudo mv docker-cleaner /usr/local/bin/
 ```
 
-### Build from Source
+#### Windows
+```powershell
+# Download from releases page or use PowerShell
+Invoke-WebRequest -Uri "https://github.com/zahidhasann88/docker-cleaner/releases/latest/download/docker-cleaner-windows-amd64.exe" -OutFile "docker-cleaner.exe"
+```
+
+### Docker
 
 ```bash
-git clone https://github.com/yourusername/docker-cleaner.git
-cd docker-cleaner
-make build
+# Run directly with Docker
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock zahidhasann88/docker-cleaner:latest
+
+# Or use GitHub Container Registry
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/zahidhasann88/docker-cleaner:latest
+```
+
+### Go Install
+
+```bash
+go install github.com/zahidhasann88/docker-cleaner@latest
 ```
 
 ## Usage
 
-### Basic Usage
-
+### List Docker Resources
 ```bash
-# Clean stopped containers and dangling images (default)
-docker-cleaner clean
-
-# Clean all resources with confirmation
-docker-cleaner clean --all
-
-# Clean specific resources
-docker-cleaner clean --containers --images --volumes
-
-# Force clean without confirmation
-docker-cleaner clean --all --force
-```
-
-### List Resources
-
-```bash
-# List all Docker resources
 docker-cleaner list
 ```
 
-### Version Information
-
+### Clean Specific Resources
 ```bash
-# Show version information
-docker-cleaner version
+# Clean only containers
+docker-cleaner clean --containers
+
+# Clean only images
+docker-cleaner clean --images
+
+# Clean only volumes
+docker-cleaner clean --volumes
+
+# Clean only networks
+docker-cleaner clean --networks
+```
+
+### Clean All Resources
+```bash
+# Clean everything (with confirmation)
+docker-cleaner clean --all
+
+# Clean everything (force, no confirmation)
+docker-cleaner clean --all --force
+```
+
+### Advanced Options
+```bash
+# Clean only dangling images (default)
+docker-cleaner clean --images --dangling
+
+# Clean all unused images
+docker-cleaner clean --images --dangling=false
+
+# Force removal of all containers (running and stopped)
+docker-cleaner clean --containers --force
+```
+
+## Examples
+
+### Basic Cleanup
+```bash
+$ docker-cleaner clean --containers --images
+This will remove Docker resources. Continue? (y/N)
+y
+🧹 Cleaning containers...
+   ✓ Removed 3 containers
+🖼️  Cleaning images...
+   ✓ Removed 5 images
+
+📊 Cleanup Summary:
+   Containers: 3
+   Images: 5
+   Volumes: 0
+   Networks: 0
+   Space reclaimed: 1.2 GB
+```
+
+### List Resources
+```bash
+$ docker-cleaner list
+📋 Docker Resources Overview
+==================================================
+
+🐳 Containers (2 total):
+   ID           Image                Status          Names
+   ------------------------------------------------------------
+   1b9d5c227153 mysql:8.0            Up 29 seconds   /db-test-1
+   a1b2c3d4e5f6 nginx:latest         Exited (0)      /web-server
+
+🖼️  Images (7 total):
+   ID           Repository                     Tag        Size
+   ----------------------------------------------------------------------
+   sha256:0c211 mysql                          8.0        736.1 MB
+   sha256:15390 nginx                          latest     142.8 MB
+   sha256:2c232 <none>                         <none>     736.1 MB
 ```
 
 ## Commands
 
-### `clean`
+| Command | Description |
+|---------|-------------|
+| `clean` | Clean Docker resources |
+| `list` | List all Docker resources |
+| `version` | Show version information |
+| `help` | Show help for any command |
 
-Clean Docker resources to free up disk space.
+## Flags
 
-**Flags:**
-- `-a, --all`: Clean all resources (containers, images, volumes, networks)
-- `-c, --containers`: Clean containers only
-- `-i, --images`: Clean images only
-- `-v, --volumes`: Clean volumes only
-- `-n, --networks`: Clean networks only
-- `-f, --force`: Force removal without confirmation
-- `--dangling`: Only remove dangling images (default: true)
-
-**Examples:**
-
-```bash
-# Clean stopped containers and dangling images
-docker-cleaner clean
-
-# Clean all resources
-docker-cleaner clean --all
-
-# Clean only containers
-docker-cleaner clean --containers
-
-# Clean images and volumes without confirmation
-docker-cleaner clean --images --volumes --force
-
-# Clean all images (not just dangling)
-docker-cleaner clean --images --dangling=false
-```
-
-### `list`
-
-List Docker resources with detailed information.
-
-**Example:**
-
-```bash
-docker-cleaner list
-```
-
-### `version`
-
-Show version information.
-
-**Example:**
-
-```bash
-docker-cleaner version
-```
-
-## Requirements
-
-- Docker installed and running
-- Docker socket accessible (usually `/var/run/docker.sock`)
-- Appropriate permissions to manage Docker resources
+| Flag | Description |
+|------|-------------|
+| `--all, -a` | Clean all resources |
+| `--containers, -c` | Clean containers |
+| `--images, -i` | Clean images |
+| `--volumes, -v` | Clean volumes |
+| `--networks, -n` | Clean networks |
+| `--force, -f` | Force removal without confirmation |
+| `--dangling` | Only remove dangling images (default: true) |
 
 ## Docker Usage
 
-You can also run docker-cleaner as a Docker container:
-
+### Run with Docker
 ```bash
-# Build the image
-docker build -t docker-cleaner .
+# Basic usage
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock zahidhasann88/docker-cleaner list
 
-# Run the container (mount Docker socket)
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock docker-cleaner clean --all
+# Clean all resources
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock zahidhasann88/docker-cleaner clean --all --force
 ```
 
-## Development
+### Docker Compose
+```yaml
+version: '3.8'
+services:
+  docker-cleaner:
+    image: zahidhasann88/docker-cleaner:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: clean --all --force
+```
+
+## Building from Source
 
 ### Prerequisites
-
 - Go 1.21 or later
-- Docker for testing
+- Docker (for Docker image)
 
-### Setup
-
+### Build
 ```bash
-git clone https://github.com/yourusername/docker-cleaner.git
+# Clone the repository
+git clone https://github.com/zahidhasann88/docker-cleaner.git
 cd docker-cleaner
-make deps
-```
 
-### Available Make Targets
+# Build for current platform
+make build
 
-```bash
-make help          # Show all available targets
-make build         # Build the binary
-make build-all     # Build for multiple platforms
-make test          # Run tests
-make lint          # Run linter
-make fmt           # Format code
-make clean         # Clean build artifacts
-make install       # Install the binary
-make release       # Create release packages
-```
+# Build for all platforms
+make build-all
 
-### Testing
-
-```bash
+# Run tests
 make test
 ```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Run `make test` and `make lint`
+6. Submit a pull request
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Safety
+## Support
 
-This tool modifies Docker resources. Always review what will be removed before running cleanup commands, especially with the `--force` flag.
+- 🐛 [Report bugs](https://github.com/zahidhasann88/docker-cleaner/issues)
+- 💡 [Request features](https://github.com/zahidhasann88/docker-cleaner/issues)
+- 📖 [Documentation](https://github.com/zahidhasann88/docker-cleaner/wiki)
 
-## Troubleshooting
+## Changelog
 
-### Permission Denied
+See [CHANGELOG.md](CHANGELOG.md) for details about each release.
 
-If you get permission denied errors:
+---
 
-```bash
-# Add your user to the docker group
-sudo usermod -aG docker $USER
-
-# Or run with sudo
-sudo docker-cleaner clean
-```
-
-### Docker Socket Not Found
-
-If Docker socket is not found:
-
-```bash
-# Check if Docker is running
-docker info
-
-# Check socket location
-ls -la /var/run/docker.sock
-```
-
-## Roadmap
-
-- [ ] Add dry-run mode
-- [ ] Support for custom Docker socket paths
-- [ ] Interactive mode for selective cleanup
-- [ ] Configuration file support
-- [ ] Backup before cleanup
-- [ ] Scheduled cleanup
-- [ ] Docker Compose integration
+**⚠️ Warning**: This tool can remove Docker resources permanently. Always review what will be removed before confirming the operation, especially in production environments.
